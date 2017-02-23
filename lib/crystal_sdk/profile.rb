@@ -16,7 +16,7 @@ module CrystalSDK
     class << self
       def search(query)
         begin
-          resp = make_request(:post, 'person_search', params: {
+          params = {
             first_name: query[:first_name],
             last_name: query[:last_name],
             email: query[:email],
@@ -24,38 +24,46 @@ module CrystalSDK
             location: query[:location],
             text_sample: query[:text_sample],
             text_type: query[:text_type]
-          })
+          }
 
+          resp = make_request(:post, 'person_search', params: params)
           body = resp.body ? JSON.parse(resp.body, symbolize_names: true) : nil
-        rescue Nestful::ResponseError => e
-          resp = e.response
 
-          raise RateLimitHitError if resp.code == '429'
-          raise NotAuthedError if resp.code == '401'
-          raise NotFoundError if resp.code == '404'
+        rescue Nestful::ResponseError => e
+          check_for_error(e.response)
           raise e
         end
 
+        check_for_error(e.response)
+        new(body[:info], body[:recommendations])
+      end
+
+      def check_for_error(resp)
+        body = resp.body ? JSON.parse(resp.body, symbolize_names: true) : nil
         not_found = body && body[:status] == 'profile_not_found'
         not_found_yet = body && body[:status] == 'profile_not_found_yet'
-        raise NotFoundError if not_found
+
+        raise RateLimitHitError if resp.code == '429'
+        raise NotAuthedError if resp.code == '401'
+        raise NotFoundError if resp.code == '404' || not_found
         raise NotFoundYetError if resp.code == '202' || not_found_yet
         raise UnexpectedError unless resp.code == '200'
-
-        new(body[:info], body[:recommendations])
       end
 
       def make_request(type, endpoint, params: {}, headers: {})
         headers = headers.merge(
-          'x-api-key' => Base.key!
+          'x-api-key' => Base.key!,
+          'X-SDK-Version' => VERSION
         )
 
-        Nestful::Request.new("#{Base::API_URL}/#{endpoint}", {
+        opts = {
           method: type,
           headers: headers,
           params: params,
           format: :json
-        }).execute
+        }
+
+        Nestful::Request.new("#{Base::API_URL}/#{endpoint}", opts).execute
       end
     end
   end
