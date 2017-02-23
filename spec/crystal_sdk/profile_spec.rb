@@ -61,7 +61,7 @@ describe CrystalSDK::Profile do
           .with(request_type, endpoint, params: query)
           .and_return(response)
       end
-      
+
       let(:response) do
         double(code: '200', body: { resp: 'some_resp' }.to_json)
       end
