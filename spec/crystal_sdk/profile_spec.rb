@@ -14,18 +14,34 @@ describe CrystalSDK::Profile do
         body = { status: 'profile_found', info: nil, recommendations: nil }
         double(body: body.to_json, code: '200')
       end
+
+      it 'should raise no error' do
+        expect { subject }.to_not raise_error
+      end
     end
 
     context '202' do
       let(:resp) { double(body: nil, code: '202') }
+
+      it 'should raise NotFoundYetError' do
+        expect { subject }.to raise_error(CrystalSDK::Profile::NotFoundYetError)
+      end
     end
 
     context '401' do
       let(:resp) { double(body: nil, code: '401') }
+
+      it 'should raise NotAuthedError' do
+        expect { subject }.to raise_error(CrystalSDK::Profile::NotAuthedError)
+      end
     end
 
     context '404' do
       let(:resp) { double(body: nil, code: '404') }
+
+      it 'should raise NotFoundError' do
+        expect { subject }.to raise_error(CrystalSDK::Profile::NotFoundError)
+      end
     end
 
     context '429' do
