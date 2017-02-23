@@ -15,10 +15,17 @@ require 'crystal_sdk'
 CrystalSDK.key = "OrgKey"
 
 begin
-  CrystalSDK::Profile.search({
+  profile = CrystalSDK::Profile.search({
     first_name: "Drew",
     last_name: "D'Agostino"
   })
+
+  print "First Name: #{profile.info.first_name}"
+  print "Last Name: #{profile.info.last_name}"
+  print "Predicted DISC Type: #{profile.info.disc_type}"
+  print "Prediction Confidence: #{profile.info.confidence}"
+
+  print "Recommendations: #{profile.recommendations}"
 
 rescue CrystalSDK::Profile::NotFoundError
   print "No profile was found"
