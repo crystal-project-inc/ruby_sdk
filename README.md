@@ -20,10 +20,12 @@ begin
     last_name: "D'Agostino"
   })
 
+  print "Profile found!"
   print "First Name: #{profile.info.first_name}"
   print "Last Name: #{profile.info.last_name}"
   print "Predicted DISC Type: #{profile.info.disc_type}"
   print "Prediction Confidence: #{profile.info.confidence}"
+  print "Personality Overview: #{profile.info.overview}"
 
   print "Recommendations: #{profile.recommendations}"
 
