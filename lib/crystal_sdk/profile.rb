@@ -24,7 +24,7 @@ module CrystalSDK
           raise e
         end
 
-        check_for_error(e.response)
+        check_for_error(resp)
         new(body[:info], body[:recommendations])
       end
 
@@ -42,8 +42,8 @@ module CrystalSDK
 
       def make_request(type, endpoint, params: {}, headers: {})
         headers = headers.merge(
-          'x-api-key' => Base.key!,
-          'X-SDK-Version' => VERSION
+          'X-Org-Token' => Base.key!,
+          'X-Sdk-Version' => VERSION
         )
 
         opts = {
