@@ -16,17 +16,7 @@ module CrystalSDK
     class << self
       def search(query)
         begin
-          params = {
-            first_name: query[:first_name],
-            last_name: query[:last_name],
-            email: query[:email],
-            company_name: query[:company_name],
-            location: query[:location],
-            text_sample: query[:text_sample],
-            text_type: query[:text_type]
-          }
-
-          resp = make_request(:post, 'person_search', params: params)
+          resp = make_request(:post, 'person_search', params: query)
           body = resp.body ? JSON.parse(resp.body, symbolize_names: true) : nil
 
         rescue Nestful::ResponseError => e
