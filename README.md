@@ -1,4 +1,4 @@
-# crystal_sdk
+# Crystal Ruby SDK
 
 This gem provides access to Crystal, the world's largest and most accurate personality database!
 
