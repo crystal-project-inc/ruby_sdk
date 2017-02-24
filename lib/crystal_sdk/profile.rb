@@ -1,10 +1,21 @@
+require 'timeout'
+require_relative 'profile/request'
+
 module CrystalSDK
   class Profile
     class NotFoundError < StandardError; end
-    class NotFoundYetError < StandardError; end
     class NotAuthedError < StandardError; end
     class RateLimitHitError < StandardError; end
     class UnexpectedError < StandardError; end
+
+    class NotFoundYetError < StandardError
+      attr_reader :request
+
+      def initialize(request, msg = 'Profile not found in time')
+        @request = request
+        super(msg)
+      end
+    end
 
     attr_reader :info, :recommendations
 
@@ -14,46 +25,40 @@ module CrystalSDK
     end
 
     class << self
-      def search(query)
+      def from_request(req)
+        return nil unless req.did_find_profile?
+
+        profile_info = req.profile_info
+        Profile.new(profile_info[:info], profile_info[:recommendations])
+      end
+
+      def search(query, timeout: 30)
+        request = nil
+
         begin
-          resp = make_request(:post, 'person_search', params: query)
-          body = resp.body ? JSON.parse(resp.body, symbolize_names: true) : nil
+          Timeout.timeout(timeout) do
+            request = Profile::Request.from_search(query)
+
+            loop do
+              sleep(2) && next unless request.did_finish?
+
+              raise NotFoundError unless request.did_find_profile?
+              return Profile.from_request(request)
+            end
+          end
+        rescue Timeout::Error
+          raise NotFoundYetError.new(request)
 
         rescue Nestful::ResponseError => e
           check_for_error(e.response)
           raise e
         end
-
-        check_for_error(resp)
-        new(body[:info], body[:recommendations])
       end
 
       def check_for_error(resp)
-        body = resp.body ? JSON.parse(resp.body, symbolize_names: true) : nil
-        not_found = body && body[:status] == 'profile_not_found'
-        not_found_yet = body && body[:status] == 'profile_not_found_yet'
-
         raise RateLimitHitError if resp.code == '429'
         raise NotAuthedError if resp.code == '401'
-        raise NotFoundError if resp.code == '404' || not_found
-        raise NotFoundYetError if resp.code == '202' || not_found_yet
-        raise UnexpectedError unless resp.code == '200'
-      end
-
-      def make_request(type, endpoint, params: {}, headers: {})
-        headers = headers.merge(
-          'X-Org-Token' => Base.key!,
-          'X-Sdk-Version' => VERSION
-        )
-
-        opts = {
-          method: type,
-          headers: headers,
-          params: params,
-          format: :json
-        }
-
-        Nestful::Request.new("#{Base::API_URL}/#{endpoint}", opts).execute
+        raise NotFoundError if resp.code == '404'
       end
     end
   end

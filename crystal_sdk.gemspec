@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'nestful', '~> 1.1'
+  s.add_dependency 'recursive-open-struct', '~> 1.0'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'webmock'
 end

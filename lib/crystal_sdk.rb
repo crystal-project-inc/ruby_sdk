@@ -3,6 +3,7 @@ require 'crystal_sdk/version'
 
 module CrystalSDK
   autoload :Base, 'crystal_sdk/base'
+  autoload :Api, 'crystal_sdk/api'
   autoload :Profile, 'crystal_sdk/profile'
 
   crystal_env_key = ENV['CRYSTAL_KEY']

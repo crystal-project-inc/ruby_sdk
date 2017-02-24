@@ -1,8 +1,9 @@
 PATH
   remote: .
   specs:
-    crystal_sdk (0.0.1)
+    crystal_sdk (0.0.3)
       nestful (~> 1.1)
+      recursive-open-struct (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -15,6 +16,7 @@ GEM
     hashdiff (0.3.2)
     nestful (1.1.1)
     public_suffix (2.0.5)
+    recursive-open-struct (1.0.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
