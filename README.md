@@ -17,7 +17,12 @@ CrystalSDK.key = "OrgKey"
 begin
   profile = CrystalSDK::Profile.search({
     first_name: "Drew",
-    last_name: "D'Agostino"
+    last_name: "D'Agostino",
+    email: "drew@crystalknows.com",
+    company_name: "Crystal",
+    location: "Nashville, TN",
+    text_sample: "I, Drew, the founder of Crystal, think that ...",
+    text_type: "various"
   })
 
   print "Profile found!"
