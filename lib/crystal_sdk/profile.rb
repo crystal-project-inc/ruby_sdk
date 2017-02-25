@@ -4,9 +4,17 @@ require_relative 'profile/request'
 module CrystalSDK
   class Profile
     class NotFoundError < StandardError; end
-    class NotAuthedError < StandardError; end
     class RateLimitHitError < StandardError; end
     class UnexpectedError < StandardError; end
+
+    class NotAuthedError < StandardError
+      attr_reader :token
+
+      def initialize(token, msg = 'Organization Token was invalid')
+        @token = token
+        super(msg)
+      end
+    end
 
     class NotFoundYetError < StandardError
       attr_reader :request
@@ -57,7 +65,7 @@ module CrystalSDK
 
       def check_for_error(resp)
         raise RateLimitHitError if resp.code == '429'
-        raise NotAuthedError if resp.code == '401'
+        raise NotAuthedError.new(Base.key) if resp.code == '401'
         raise NotFoundError if resp.code == '404'
       end
     end

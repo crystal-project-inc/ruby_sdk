@@ -92,6 +92,12 @@ describe CrystalSDK::Profile do
 
       it 'should raise NotFoundYetError' do
         expect { subject }.to raise_error(CrystalSDK::Profile::NotFoundYetError)
+
+        begin
+          subject
+        rescue CrystalSDK::Profile::NotFoundYetError => e
+          expect(e.request).to be(response)
+        end
       end
     end
   end
@@ -120,8 +126,23 @@ describe CrystalSDK::Profile do
     context '401' do
       let(:resp) { double(code: '401') }
 
+      before(:each) do
+        @orig_key = CrystalSDK.key
+        CrystalSDK.key = 'SomeKey'
+      end
+
+      after(:each) do
+        CrystalSDK.key = @orig_key
+      end
+
       it 'should raise NotAuthedError' do
         expect { subject }.to raise_error(CrystalSDK::Profile::NotAuthedError)
+
+        begin
+          subject
+        rescue CrystalSDK::Profile::NotAuthedError => e
+          expect(e.token).to eql('SomeKey')
+        end
       end
     end
 

@@ -34,17 +34,17 @@ begin
 
   print "Recommendations: #{profile.recommendations}"
 
-rescue CrystalSDK::Profile::NotFoundError
+rescue CrystalSDK::Profile::NotFoundError => e
   print "No profile was found"
 
-rescue CrystalSDK::Profile::NotFoundYetError
-  print "Profile search exceeded time limit"
+rescue CrystalSDK::Profile::NotFoundYetError => e
+  print "Profile search exceeded time limit: #{e.request.id}"
 
-rescue CrystalSDK::Profile::RateLimitHitError
+rescue CrystalSDK::Profile::RateLimitHitError => e
   print "The organization's API rate limit was hit"
 
-rescue CrystalSDK::Profile::NotAuthedError
-  print "Org key was invalid"
+rescue CrystalSDK::Profile::NotAuthedError => e
+  print "Org key was invalid: #{e.token}"
 
 rescue StandardError => e
   print "Unexpected error occurred: #{e}"
