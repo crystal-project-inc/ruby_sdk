@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    crystal_sdk (1.0.0)
+    crystal_sdk (1.0.1)
       nestful (~> 1.1)
       recursive-open-struct (~> 1.0)
 

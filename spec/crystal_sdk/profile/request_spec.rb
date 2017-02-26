@@ -22,6 +22,17 @@ describe CrystalSDK::Profile::Request do
 
         expect { subject }.to raise_error('SomeRandomError')
       end
+
+      it 'should pass Nestful exceptions to check_for_error' do
+        allow(CrystalSDK::Api).to receive(:make_request)
+          .with(request_type, endpoint, params: query)
+          .and_raise(Nestful::ResponseError.new(nil, nil))
+
+        expect(CrystalSDK::Profile::Request).to receive(:check_for_error)
+          .and_raise('CheckForErrorCalled')
+
+        expect { subject }.to raise_error('CheckForErrorCalled')
+      end
     end
 
     context 'CrystalSDK::Api returns invalid json body' do
@@ -246,6 +257,67 @@ describe CrystalSDK::Profile::Request do
         expect(subject[:info].deep_info.info).to eql('deep_info')
         expect(subject[:recommendations].some_recs).to eql('some_recs')
         expect(subject[:recommendations].deep_recs.recs).to eql('deep_recs')
+      end
+    end
+  end
+
+  describe '.check_for_error' do
+    subject { CrystalSDK::Profile::Request.check_for_error(resp) }
+
+    context '200' do
+      let(:resp) do
+        double(code: '200')
+      end
+
+      it 'should raise no error' do
+        expect { subject }.to_not raise_error
+      end
+    end
+
+    context '202' do
+      let(:resp) { double(code: '202') }
+
+      it 'should raise no error' do
+        expect { subject }.to_not raise_error
+      end
+    end
+
+    context '401' do
+      let(:resp) { double(code: '401') }
+
+      before(:each) do
+        @orig_key = CrystalSDK.key
+        CrystalSDK.key = 'SomeKey'
+      end
+
+      after(:each) do
+        CrystalSDK.key = @orig_key
+      end
+
+      it 'should raise NotAuthedError' do
+        expect { subject }.to raise_error(CrystalSDK::Profile::NotAuthedError)
+
+        begin
+          subject
+        rescue CrystalSDK::Profile::NotAuthedError => e
+          expect(e.token).to eql('SomeKey')
+        end
+      end
+    end
+
+    context '404' do
+      let(:resp) { double(code: '404') }
+
+      it 'should raise NotFoundError' do
+        expect { subject }.to raise_error(CrystalSDK::Profile::NotFoundError)
+      end
+    end
+
+    context '429' do
+      let(:resp) { double(code: '429') }
+
+      it 'should raise RateLimitHitError' do
+        expect { subject }.to raise_error(CrystalSDK::Profile::RateLimitHitError)
       end
     end
   end

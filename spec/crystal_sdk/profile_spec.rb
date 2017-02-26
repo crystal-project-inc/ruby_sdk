@@ -43,20 +43,10 @@ describe CrystalSDK::Profile do
           .and_return(req)
 
         allow(req).to receive(:did_finish?)
-          .and_raise(Nestful::ResponseError.new(nil, double()))
+          .and_raise(StandardError.new)
       end
 
-      it 'should pass it off to check_for_error' do
-        expect(CrystalSDK::Profile).to receive(:check_for_error)
-          .and_raise('CheckForErrorCalled')
-
-        expect { subject }.to raise_error('CheckForErrorCalled')
-      end
-
-      it 'should still raise exception if passed check_for_error' do
-        expect(CrystalSDK::Profile).to receive(:check_for_error)
-          .and_return(nil)
-
+      it 'should raise exception' do
         expect { subject }.to raise_error
       end
     end
@@ -78,7 +68,7 @@ describe CrystalSDK::Profile do
     end
 
     context 'request did not finish before timeout expired' do
-      subject { CrystalSDK::Profile.search(query, timeout: 1) }
+      subject { CrystalSDK::Profile.search(query, timeout: 0.01) }
 
       before(:each) do
         allow(CrystalSDK::Profile::Request).to receive(:from_search)
@@ -100,66 +90,85 @@ describe CrystalSDK::Profile do
         end
       end
     end
-  end
 
-  describe '.check_for_error' do
-    subject { CrystalSDK::Profile.check_for_error(resp) }
+    context 'ApiSDK threw errors during initial request creation' do
+      context '401 error' do
+        before(:each) do
+          allow(CrystalSDK::Api).to receive(:make_request)
+            .and_raise(Nestful::ResponseError.new(nil, resp))
+        end
+        let(:resp) { OpenStruct.new(code: '401') }
 
-    context '200' do
-      let(:resp) do
-        double(code: '200')
+        it 'should raise NotAuthedError' do
+          expect { subject }.to raise_error(CrystalSDK::Profile::NotAuthedError)
+        end
       end
 
-      it 'should raise no error' do
-        expect { subject }.to_not raise_error
-      end
-    end
+      context '404 error' do
+        before(:each) do
+          allow(CrystalSDK::Api).to receive(:make_request)
+            .and_raise(Nestful::ResponseError.new(nil, resp))
+        end
+        let(:resp) { OpenStruct.new(code: '404') }
 
-    context '202' do
-      let(:resp) { double(code: '202') }
-
-      it 'should raise no error' do
-        expect { subject }.to_not raise_error
-      end
-    end
-
-    context '401' do
-      let(:resp) { double(code: '401') }
-
-      before(:each) do
-        @orig_key = CrystalSDK.key
-        CrystalSDK.key = 'SomeKey'
+        it 'should raise NotFoundError' do
+          expect { subject }.to raise_error(CrystalSDK::Profile::NotFoundError)
+        end
       end
 
-      after(:each) do
-        CrystalSDK.key = @orig_key
-      end
+      context '429 error' do
+        before(:each) do
+          allow(CrystalSDK::Api).to receive(:make_request)
+            .and_raise(Nestful::ResponseError.new(nil, resp))
+        end
+        let(:resp) { OpenStruct.new(code: '429') }
 
-      it 'should raise NotAuthedError' do
-        expect { subject }.to raise_error(CrystalSDK::Profile::NotAuthedError)
-
-        begin
-          subject
-        rescue CrystalSDK::Profile::NotAuthedError => e
-          expect(e.token).to eql('SomeKey')
+        it 'should raise RateLimitHitError' do
+          expect { subject }.to raise_error(CrystalSDK::Profile::RateLimitHitError)
         end
       end
     end
 
-    context '404' do
-      let(:resp) { double(code: '404') }
+    context 'ApiSDK threw errors during polling' do
+      context '401 error' do
+        before(:each) do
+          allow(CrystalSDK::Profile::Request).to receive(:from_search)
+            .and_return(CrystalSDK::Profile::Request.new('some_id'))
 
-      it 'should raise NotFoundError' do
-        expect { subject }.to raise_error(CrystalSDK::Profile::NotFoundError)
+          allow(CrystalSDK::Api).to receive(:make_request)
+            .and_raise(Nestful::ResponseError.new(nil, resp))
+        end
+        let(:resp) { OpenStruct.new(code: '401') }
+
+        it 'should raise NotAuthedError' do
+          expect { subject }.to raise_error(CrystalSDK::Profile::NotAuthedError)
+        end
+      end
+
+      context '404 error' do
+        before(:each) do
+          allow(CrystalSDK::Api).to receive(:make_request)
+            .and_raise(Nestful::ResponseError.new(nil, resp))
+        end
+        let(:resp) { OpenStruct.new(code: '404') }
+
+        it 'should raise NotFoundError' do
+          expect { subject }.to raise_error(CrystalSDK::Profile::NotFoundError)
+        end
+      end
+
+      context '429 error' do
+        before(:each) do
+          allow(CrystalSDK::Api).to receive(:make_request)
+            .and_raise(Nestful::ResponseError.new(nil, resp))
+        end
+        let(:resp) { OpenStruct.new(code: '429') }
+
+        it 'should raise RateLimitHitError' do
+          expect { subject }.to raise_error(CrystalSDK::Profile::RateLimitHitError)
+        end
       end
     end
 
-    context '429' do
-      let(:resp) { double(code: '429') }
-
-      it 'should raise RateLimitHitError' do
-        expect { subject }.to raise_error(CrystalSDK::Profile::RateLimitHitError)
-      end
-    end
   end
 end
