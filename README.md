@@ -142,6 +142,7 @@ We try and store your request for a few days after the request has been started.
 ## Contributing
 
 - Clone the repository:
+
   `git clone git@github.com:crystal-project-inc/ruby_sdk.git`
 
 - Run rspec tests:
