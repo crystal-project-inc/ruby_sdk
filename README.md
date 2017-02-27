@@ -67,17 +67,20 @@ The option we use internally in the SDK, is to poll for request information peri
 MAX_RETRIES = 10
 PAUSE_IN_SECONDS = 3
 
+# Start the request
 query = { first_name: "Drew", ... }
 request = CrystalSDK::Profile::Request.from_search(query)
 
-profile = nil
-
+# Poll server until request finishes
 MAX_RETRIES.times do
+  
+  # If the request hasn't finished, wait and loop again
   unless request.did_finish?
     sleep(PAUSE_IN_SECONDS)
     next
   end
 
+  # Get profile information
   if request.did_find_profile?
     profile = Profile.from_request(request)
   end
@@ -85,6 +88,7 @@ MAX_RETRIES.times do
   break
 end
 
+# Use the profile if it was found
 profile
 ```
 
