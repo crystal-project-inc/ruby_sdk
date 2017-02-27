@@ -4,6 +4,22 @@ This gem provides access to Crystal, the world's largest and most accurate perso
 
 ![Recommendations Demo](docs/recommendations.png)
 
+#### Want to use the Raw API?
+
+Find the docs here:
+https://developers.crystalknows.com/
+
+#### Want to learn more about us?
+
+Visit our website: https://www.crystalknows.com/
+
+#### Need an Organization Key?
+
+Get in touch with us at hello@crystalknows.com
+
+
+# Usage
+
 Here's how to install it:
 ```bash
 $ gem install crystal_sdk
