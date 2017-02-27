@@ -69,12 +69,19 @@ PAUSE_IN_SECONDS = 3
 
 query = { first_name: "Drew", ... }
 request = CrystalSDK::Profile::Request.from_search(query)
+
 profile = nil
-
 MAX_RETRIES.times do
-  sleep(PAUSE_IN_SECONDS) and next unless request.did_finish?
 
-  profile = Profile.from_request(request) if request.did_find_profile?
+   unless request.did_finish?
+    sleep(PAUSE_IN_SECONDS)
+    next
+   end
+
+  if request.did_find_profile?
+    profile = Profile.from_request(request)
+  end
+  
   break
 end
 
