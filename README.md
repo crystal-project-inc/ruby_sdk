@@ -136,7 +136,7 @@ if backgrounded_request.did_finish? && backgrounded_request.did_find_profile?
 end
 ```
 
-We try and store your request for a few days after the request has been started. Your Request ID should work when you try to pull information from it - for that period of time.
+We try and store your request for a few days after the request has been started. Your Request ID should work when you try to pull information from it for at least that period of time!
 
 
 ## Contributing
