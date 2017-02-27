@@ -34,13 +34,13 @@ begin
 
   print "Recommendations: #{profile.recommendations}"
 
-rescue CrystalSDK::Profile::NotFoundError => e
+rescue CrystalSDK::Profile::NotFoundError
   print "No profile was found"
 
 rescue CrystalSDK::Profile::NotFoundYetError => e
   print "Profile search exceeded time limit: #{e.request.id}"
 
-rescue CrystalSDK::Profile::RateLimitHitError => e
+rescue CrystalSDK::Profile::RateLimitHitError
   print "The organization's API rate limit was hit"
 
 rescue CrystalSDK::Profile::NotAuthedError => e
@@ -50,4 +50,22 @@ rescue StandardError => e
   print "Unexpected error occurred: #{e}"
 
 end
+```
+
+## Asynchronous Flow
+
+When requesting large amounts of profiles, or when wanting to have more fine-grained control over performance, we recommend using our asynchronous flow. It allows us to process your requests in parallel and get the information back to you more quickly.
+
+First, kick off the request:
+
+```ruby
+CrystalSDK::Profile::Request.from_search({
+  first_name: "Drew",
+  last_name: "D'Agostino",
+  email: "drew@crystalknows.com",
+  company_name: "Crystal",
+  location: "Nashville, TN",
+  text_sample: "I, Drew, the founder of Crystal, think that ...",
+  text_type: "various"
+})
 ```
