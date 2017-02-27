@@ -51,3 +51,21 @@ rescue StandardError => e
 
 end
 ```
+
+## Asynchronous Flow
+
+When requesting large amounts of profiles, or when wanting to have more fine-grained control over performance, we recommend using our asynchronous flow. It allows us to process your requests in parallel and get the information back to you more quickly.
+
+First, kick off the request:
+
+```ruby
+Profile::Request.from_search({
+  first_name: "Drew",
+  last_name: "D'Agostino",
+  email: "drew@crystalknows.com",
+  company_name: "Crystal",
+  location: "Nashville, TN",
+  text_sample: "I, Drew, the founder of Crystal, think that ...",
+  text_type: "various"
+})
+```
