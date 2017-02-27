@@ -59,7 +59,7 @@ When requesting large amounts of profiles, or when wanting to have more fine-gra
 First, kick off the request:
 
 ```ruby
-Profile::Request.from_search({
+CrystalSDK::Profile::Request.from_search({
   first_name: "Drew",
   last_name: "D'Agostino",
   email: "drew@crystalknows.com",
