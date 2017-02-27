@@ -11,6 +11,8 @@ $ gem install crystal_sdk
 
 Here's how you use it:
 
+## Synchronous Flow (Recommended)
+
 ```ruby
 require 'crystal_sdk'
 
@@ -54,41 +56,11 @@ rescue StandardError => e
 end
 ```
 
-## Asynchronous Flow
+## Asynchronous Flow (For bulk analysis)
 
-When requesting large amounts of profiles, or when wanting to have more fine-grained control over performance, we recommend using our asynchronous flow. It allows us to process your requests in parallel and get the information back to you more quickly. There are a few options for using this capability.
+When requesting large amounts of profiles, or when wanting to have more fine-grained control over performance, we recommend using our asynchronous flow. It allows us to process your requests in parallel and get the information back to you more quickly. There are a couple options for using this capability.
 
-### Option 1: Wait, then fetch
-
-The first option is to wait a period of time and check if the request is finished:
-
-```ruby
-query = { first_name: "Drew", ... }
-profile_request = CrystalSDK::Profile::Request.from_search(query)
-
-sleep(10)
-
-if profile_request.did_finish?
-  begin
-    profile = profile_request.profile
-    ...
-
-  rescue CrystalSDK::Profile::NotFoundError
-    print "No profile was found"
-
-  rescue CrystalSDK::Profile::NotAuthedError => e
-    print "Org key was invalid: #{e.token}"
-
-  rescue StandardError => e
-    print "Unexpected error: #{e}
-
-  end
-end
-```
-
-This option allows you to set up a series of requests and then wait a reasonable amount of time before they complete. It's the simplest option that would allow you to benefit from our parallel processing while not adding much complexity.
-
-### Option 2: Polling
+### Option 1: Polling (Fastest responses, for realtime fetching and enrichment)
 The option we use internally in the SDK, is to poll for request information periodically until a set timeout has been reached:
 
 ```ruby
@@ -111,10 +83,10 @@ profile
 
 Polling can be extended to poll for multiple profiles. It gives the efficiency of our parallel processing, while writing code that behaves synchronously.
 
-This option is great if you want information as fast as possible while keeping open network connections and code complexity to a minimum. It is especially useful if you are requesting multiple profiles and can process the profiles one at a time, as each individual profile comes in (as opposed to waiting for all of them to come in before continuing).
+This option is great if you want information as fast as possible while keeping open network connections and code complexity to a minimum. It is especially useful if you are requesting multiple profiles and can process the profiles one at a time, as each individual profile comes in (as opposed to waiting for all of them to come in before processing anything).
 
 
-### Option 3: Background Processing
+### Option 2: Background Processing (For large lists and passive enrichment)
 
 Sometimes, it isn't important to have the profile information immediately. Especially when dealing with larger jobs or passive data enrichment. In that case, we allow you to save the Request ID and pull information from the request at a later time via this ID.
 
