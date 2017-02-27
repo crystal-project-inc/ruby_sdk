@@ -1,7 +1,6 @@
 # Crystal Ruby SDK
 
 [![CircleCI](https://circleci.com/gh/crystal-project-inc/ruby_sdk.svg?style=svg)](https://circleci.com/gh/crystal-project-inc/ruby_sdk)
-
 [![Gem Version](https://badge.fury.io/rb/crystal_sdk.svg)](https://badge.fury.io/rb/crystal_sdk)
 
 This gem provides access to Crystal, the world's largest and most accurate personality database!
