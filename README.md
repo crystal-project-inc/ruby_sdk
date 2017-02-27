@@ -60,7 +60,7 @@ end
 
 When requesting large amounts of profiles, or when wanting to have more fine-grained control over performance, we recommend using our asynchronous flow. It allows us to process your requests in parallel and get the information back to you more quickly. There are a couple options for using this capability.
 
-### Option 1: Polling (Fastest responses, for realtime fetching and enrichment)
+### Option 1: Polling (Small Lists + Realtime Enrichment)
 The option we use internally in the SDK, is to poll for request information periodically until a set timeout has been reached:
 
 ```ruby
@@ -86,7 +86,7 @@ Polling can be extended to poll for multiple profiles. It gives the efficiency o
 This option is great if you want information as fast as possible while keeping open network connections and code complexity to a minimum. It is especially useful if you are requesting multiple profiles and can process the profiles one at a time, as each individual profile comes in (as opposed to waiting for all of them to come in before processing anything).
 
 
-### Option 2: Background Processing (For large lists and passive enrichment)
+### Option 2: Background Processing (Large Lists + Passive Enrichment)
 
 Sometimes, it isn't important to have the profile information immediately. Especially when dealing with larger jobs or passive data enrichment. In that case, we allow you to save the Request ID and pull information from the request at a later time via this ID.
 
