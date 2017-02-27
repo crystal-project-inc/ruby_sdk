@@ -37,8 +37,10 @@ Here's how you use it:
 ```ruby
 require 'crystal_sdk'
 
-CrystalSDK.key = "OrgKey"
+# Set your Organization Access Token
+CrystalSDK.key = "OrgToken"
 
+# Fetch the profile
 begin
   profile = CrystalSDK::Profile.search({
     first_name: "Drew",
@@ -69,7 +71,7 @@ rescue CrystalSDK::Profile::RateLimitHitError
   print "The organization's API rate limit was hit"
 
 rescue CrystalSDK::Profile::NotAuthedError => e
-  print "Org key was invalid: #{e.token}"
+  print "Org token was invalid: #{e.token}"
 
 rescue StandardError => e
   print "Unexpected error occurred: #{e}"
@@ -89,8 +91,8 @@ The option we use internally in the SDK, is to poll for request information peri
 PAUSE_IN_SECONDS = 3
 MAX_RETRIES = 10
 
-# Set your Organization Key
-CrystalSDK.key = "OrgKey"
+# Set your Organization Access Token
+CrystalSDK.key = "OrgToken"
 
 # Start the request
 query = { first_name: "Drew", ... }
@@ -128,8 +130,8 @@ Sometimes, it isn't important to have the profile information immediately. Espec
 
 ```ruby
 
-# Set your Organization Key
-CrystalSDK.key = "OrgKey"
+# Set your Organization Access Token
+CrystalSDK.key = "OrgToken"
 
 # Send the request to Crystal
 profile_request = CrystalSDK::Profile::Request.from_search(query)
