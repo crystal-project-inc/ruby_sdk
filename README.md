@@ -2,6 +2,8 @@
 
 This gem provides access to Crystal, the world's largest and most accurate personality database!
 
+![Recommendations Demo](docs/recommendations.png)
+
 Here's how to install it:
 ```bash
 $ gem install crystal_sdk
