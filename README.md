@@ -18,7 +18,7 @@ https://developers.crystalknows.com
 
 Visit our website: https://www.crystalknows.com
 
-#### Need an Organization Key?
+#### Need an Organization Access Token?
 
 Get in touch with us at hello@crystalknows.com
 
