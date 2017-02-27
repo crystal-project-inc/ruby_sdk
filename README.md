@@ -34,13 +34,13 @@ begin
 
   print "Recommendations: #{profile.recommendations}"
 
-rescue CrystalSDK::Profile::NotFoundError => e
+rescue CrystalSDK::Profile::NotFoundError
   print "No profile was found"
 
 rescue CrystalSDK::Profile::NotFoundYetError => e
   print "Profile search exceeded time limit: #{e.request.id}"
 
-rescue CrystalSDK::Profile::RateLimitHitError => e
+rescue CrystalSDK::Profile::RateLimitHitError
   print "The organization's API rate limit was hit"
 
 rescue CrystalSDK::Profile::NotAuthedError => e
