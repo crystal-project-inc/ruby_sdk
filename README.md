@@ -4,7 +4,9 @@ This gem provides access to Crystal, the world's largest and most accurate perso
 
 ![Recommendations Demo](docs/recommendations.png)
 
-#### Want to use the Raw API?
+## FAQ
+
+#### Want to use our Raw API?
 
 Find the docs here:
 https://developers.crystalknows.com/
@@ -80,8 +82,12 @@ When requesting large amounts of profiles, or when wanting to have more fine-gra
 The option we use internally in the SDK, is to poll for request information periodically until a set timeout has been reached:
 
 ```ruby
-MAX_RETRIES = 10
+# Decided on retry limit and time between polls
 PAUSE_IN_SECONDS = 3
+MAX_RETRIES = 10
+
+# Set your Organization Key
+CrystalSDK.key = "OrgKey"
 
 # Start the request
 query = { first_name: "Drew", ... }
@@ -118,6 +124,9 @@ This option is great if you want information as fast as possible while keeping o
 Sometimes, it isn't important to have the profile information immediately. Especially when dealing with larger jobs or passive data enrichment. In that case, we allow you to save the Request ID and pull information from the request at a later time via this ID.
 
 ```ruby
+
+# Set your Organization Key
+CrystalSDK.key = "OrgKey"
 
 # Send the request to Crystal
 profile_request = CrystalSDK::Profile::Request.from_search(query)
