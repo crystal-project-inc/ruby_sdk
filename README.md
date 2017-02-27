@@ -73,10 +73,10 @@ request = CrystalSDK::Profile::Request.from_search(query)
 profile = nil
 MAX_RETRIES.times do
 
-   unless request.did_finish?
+  unless request.did_finish?
     sleep(PAUSE_IN_SECONDS)
     next
-   end
+  end
 
   if request.did_find_profile?
     profile = Profile.from_request(request)
