@@ -146,7 +146,7 @@ We try and store your request for a few days after the request has been started.
   `git clone git@github.com:crystal-project-inc/ruby_sdk.git`
 
 - Run rspec tests:
-  
+
   `rspec`
 
 - Open up an IRB console with the gem loaded to play around with it:
