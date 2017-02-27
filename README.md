@@ -6,7 +6,7 @@ This gem provides access to Crystal, the world's largest and most accurate perso
 
 ## FAQ
 
-#### Want to use our Raw API?
+#### Want to use our raw API?
 
 Find the docs here:
 https://developers.crystalknows.com
