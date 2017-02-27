@@ -9,11 +9,11 @@ This gem provides access to Crystal, the world's largest and most accurate perso
 #### Want to use our Raw API?
 
 Find the docs here:
-https://developers.crystalknows.com/
+https://developers.crystalknows.com
 
 #### Want to learn more about us?
 
-Visit our website: https://www.crystalknows.com/
+Visit our website: https://www.crystalknows.com
 
 #### Need an Organization Key?
 
