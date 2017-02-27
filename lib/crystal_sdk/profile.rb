@@ -21,21 +21,23 @@ module CrystalSDK
 
       def search(query, timeout: 30)
         request = nil
+        profile = nil
 
-        begin
-          Timeout.timeout(timeout) do
-            request = Profile::Request.from_search(query)
+        Timeout.timeout(timeout) do
+          request = Profile::Request.from_search(query)
 
-            loop do
-              sleep(2) && next unless request.did_finish?
+          loop do
+            sleep(2) && next unless request.did_finish?
+            raise NotFoundError unless request.did_find_profile?
 
-              raise NotFoundError unless request.did_find_profile?
-              return Profile.from_request(request)
-            end
+            profile = Profile.from_request(request)
+            break
           end
-        rescue Timeout::Error
-          raise NotFoundYetError.new(request)
         end
+
+        profile
+      rescue Timeout::Error
+        raise NotFoundYetError.new(request)
       end
     end
   end

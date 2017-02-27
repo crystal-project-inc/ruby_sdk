@@ -67,6 +67,8 @@ module CrystalSDK
 
         info = fetch_request_info
         !info[:data][:info][:error]
+      rescue Profile::NotFoundError
+        false
       end
 
       def profile_info

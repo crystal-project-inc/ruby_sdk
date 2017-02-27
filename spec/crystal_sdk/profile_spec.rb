@@ -43,11 +43,11 @@ describe CrystalSDK::Profile do
           .and_return(req)
 
         allow(req).to receive(:did_finish?)
-          .and_raise(StandardError.new)
+          .and_raise('SomeError')
       end
 
       it 'should raise exception' do
-        expect { subject }.to raise_error
+        expect { subject }.to raise_error('SomeError')
       end
     end
 
