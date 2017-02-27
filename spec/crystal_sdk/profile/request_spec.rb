@@ -156,6 +156,35 @@ describe CrystalSDK::Profile::Request do
       it { is_expected.to eql(true) }
     end
 
+    context '#fetch_status raises NotFoundError' do
+      before(:each) do
+        allow(request).to receive(:fetch_status)
+          .and_raise(CrystalSDK::Profile::NotFoundError)
+      end
+
+      it { is_expected.to eql(true) }
+    end
+
+    context '#fetch_status raises NotAuthedError' do
+      before(:each) do
+        allow(request).to receive(:fetch_status)
+          .and_raise(CrystalSDK::Profile::NotAuthedError.new('SomeToken'))
+      end
+
+      it { is_expected.to eql(true) }
+    end
+
+    context '#fetch_status raises an unexpected error' do
+      before(:each) do
+        allow(request).to receive(:fetch_status)
+          .and_raise('SomeError')
+      end
+
+      it 'should not suppress it' do
+        expect { subject }.to raise_error('SomeError')
+      end
+    end
+
     context '#fetch_status returns something else' do
       before(:each) do
         allow(request).to receive(:fetch_status).and_return('something')

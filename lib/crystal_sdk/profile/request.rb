@@ -56,6 +56,10 @@ module CrystalSDK
       def did_finish?
         status = fetch_status
         status == 'complete' || status == 'error'
+      rescue Profile::NotFoundError
+        true
+      rescue Profile::NotAuthedError
+        true
       end
 
       def did_find_profile?
