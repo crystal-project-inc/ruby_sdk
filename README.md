@@ -1,8 +1,29 @@
 # Crystal Ruby SDK
 
+[![CircleCI](https://circleci.com/gh/crystal-project-inc/ruby_sdk.svg?style=shield)](https://circleci.com/gh/crystal-project-inc/ruby_sdk)
+[![Gem Version](https://badge.fury.io/rb/crystal_sdk.svg)](https://badge.fury.io/rb/crystal_sdk)
+
 This gem provides access to Crystal, the world's largest and most accurate personality database!
 
 ![Recommendations Demo](docs/recommendations.png)
+
+## FAQ
+
+#### Want to use our raw API?
+
+Find the docs here:
+https://developers.crystalknows.com
+
+#### Want to learn more about us?
+
+Visit our website: https://www.crystalknows.com
+
+#### Need an Organization Access Token?
+
+Get in touch with us at hello@crystalknows.com
+
+
+# Usage
 
 Here's how to install it:
 ```bash
@@ -16,8 +37,10 @@ Here's how you use it:
 ```ruby
 require 'crystal_sdk'
 
-CrystalSDK.key = "OrgKey"
+# Set your Organization Access Token
+CrystalSDK.key = "OrgToken"
 
+# Fetch the profile
 begin
   profile = CrystalSDK::Profile.search({
     first_name: "Drew",
@@ -48,7 +71,7 @@ rescue CrystalSDK::Profile::RateLimitHitError
   print "The organization's API rate limit was hit"
 
 rescue CrystalSDK::Profile::NotAuthedError => e
-  print "Org key was invalid: #{e.token}"
+  print "Org token was invalid: #{e.token}"
 
 rescue StandardError => e
   print "Unexpected error occurred: #{e}"
@@ -123,6 +146,36 @@ profile
 Polling can be extended to poll for multiple profiles. It gives the efficiency of our parallel processing, while writing code that behaves synchronously.
 
 This option is great if you want information as fast as possible while keeping open network connections and code complexity to a minimum. It is especially useful if you are requesting multiple profiles and can process the profiles one at a time, as each individual profile comes in (as opposed to waiting for all of them to come in before processing anything).
+
+
+### Option 2: Background Processing (Large Lists + Passive Enrichment)
+
+Sometimes, it isn't important to have the profile information immediately. Especially when dealing with larger jobs or passive data enrichment. In that case, we allow you to save the Request ID and pull information from the request at a later time via this ID.
+
+```ruby
+
+# Set your Organization Access Token
+CrystalSDK.key = "OrgToken"
+
+# Send the request to Crystal
+profile_request = CrystalSDK::Profile::Request.from_search(query)
+
+# Pull out the Profile Request ID (string)
+profile_request_id = profile_request.id
+
+# Save the Request ID somewhere (to a database or background job, for example)
+...
+
+# Later, pull up the Request ID and pull information about it
+backgrounded_request = CrystalSDK::Profile::Request.new(profile_request_id)
+
+if backgrounded_request.did_finish? && backgrounded_request.did_find_profile?
+  profile = backgrounded_request.profile
+  ...
+end
+```
+
+We try and store your request for a few days after the request has been started. Your Request ID should work when you try to pull information from it for at least that period of time!
 
 
 ## Contributing
