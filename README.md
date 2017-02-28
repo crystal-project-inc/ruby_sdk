@@ -148,36 +148,6 @@ Polling can be extended to poll for multiple profiles. It gives the efficiency o
 This option is great if you want information as fast as possible while keeping open network connections and code complexity to a minimum. It is especially useful if you are requesting multiple profiles and can process the profiles one at a time, as each individual profile comes in (as opposed to waiting for all of them to come in before processing anything).
 
 
-### Option 2: Background Processing (Large Lists + Passive Enrichment)
-
-Sometimes, it isn't important to have the profile information immediately. Especially when dealing with larger jobs or passive data enrichment. In that case, we allow you to save the Request ID and pull information from the request at a later time via this ID.
-
-```ruby
-
-# Set your Organization Access Token
-CrystalSDK.key = "OrgToken"
-
-# Send the request to Crystal
-profile_request = CrystalSDK::Profile::Request.from_search(query)
-
-# Pull out the Profile Request ID (string)
-profile_request_id = profile_request.id
-
-# Save the Request ID somewhere (to a database or background job, for example)
-...
-
-# Later, pull up the Request ID and pull information about it
-backgrounded_request = CrystalSDK::Profile::Request.new(profile_request_id)
-
-if backgrounded_request.did_finish? && backgrounded_request.did_find_profile?
-  profile = backgrounded_request.profile
-  ...
-end
-```
-
-We try and store your request for a few days after the request has been started. Your Request ID should work when you try to pull information from it for at least that period of time!
-
-
 ## Contributing
 
 - Clone the repository:
