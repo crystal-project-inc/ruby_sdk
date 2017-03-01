@@ -12,7 +12,7 @@ describe CrystalSDK::Profile::Request do
     subject { CrystalSDK::Profile::Request.from_search(query) }
     let(:query) { { first_name: 'Test', last_name: 'Test' } }
     let(:request_type) { :post }
-    let(:endpoint) { 'profile_search/async' }
+    let(:endpoint) { 'profiles/async' }
 
     context 'CrystalSDK::Api raises exception' do
       it 'should not suppress it' do
@@ -59,7 +59,7 @@ describe CrystalSDK::Profile::Request do
   describe '#fetch_request_info' do
     subject { CrystalSDK::Profile::Request.new('my_id').fetch_request_info() }
     let(:request_type) { :get }
-    let(:endpoint) { 'results/my_id' }
+    let(:endpoint) { 'profiles/results/my_id' }
 
     context 'CrystalSDK::Api raises exception' do
       it 'should not suppress it' do
@@ -247,7 +247,7 @@ describe CrystalSDK::Profile::Request do
         context '#fetch_request_info error is not nil' do
           before(:each) do
             allow(request).to receive(:fetch_request_info).and_return({
-              data: { info: { error: 'error' } }
+              info: { error: 'error' }
             })
           end
 
@@ -257,7 +257,7 @@ describe CrystalSDK::Profile::Request do
         context '#fetch_request_info error is nil' do
           before(:each) do
             allow(request).to receive(:fetch_request_info).and_return({
-              data: { info: { error: nil } }
+              info: { error: nil }
             })
           end
 
@@ -283,19 +283,17 @@ describe CrystalSDK::Profile::Request do
       before(:each) do
         allow(request).to receive(:did_find_profile?).and_return(true)
         allow(request).to receive(:fetch_request_info).and_return({
-          data: {
             info: {
-              some_info: 'some_info',
-              deep_info: {
-                info: 'deep_info'
-              }
-            },
+            some_info: 'some_info',
+            deep_info: {
+              info: 'deep_info'
+            }
+          },
 
-            recommendations: {
-              some_recs: 'some_recs',
-              deep_recs: {
-                recs: 'deep_recs'
-              }
+          recommendations: {
+            some_recs: 'some_recs',
+            deep_recs: {
+              recs: 'deep_recs'
             }
           }
         })

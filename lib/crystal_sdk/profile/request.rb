@@ -13,7 +13,7 @@ module CrystalSDK
       class << self
         def from_search(query)
           begin
-            resp = Api.make_request(:post, 'profile_search/async', params: query)
+            resp = Api.make_request(:post, 'profiles/async', params: query)
           rescue Nestful::ResponseError => e
             check_for_error(e.response)
             raise e
@@ -34,7 +34,7 @@ module CrystalSDK
         return @cached_data if @cached_data
 
         begin
-          resp = Api.make_request(:get, "results/#{@id}")
+          resp = Api.make_request(:get, "profiles/results/#{@id}")
         rescue Nestful::ResponseError => e
           Request.check_for_error(e.response)
           raise e
@@ -66,7 +66,8 @@ module CrystalSDK
         return false unless did_finish? && fetch_status == 'complete'
 
         info = fetch_request_info
-        !info[:data][:info][:error]
+        print info
+        !info[:info][:error]
       rescue Profile::NotFoundError
         false
       end
@@ -75,8 +76,8 @@ module CrystalSDK
         return nil unless did_find_profile?
 
         req_info = fetch_request_info
-        profile_info = RecursiveOpenStruct.new(req_info[:data][:info])
-        recommendations = RecursiveOpenStruct.new(req_info[:data][:recommendations])
+        profile_info = RecursiveOpenStruct.new(req_info[:info])
+        recommendations = RecursiveOpenStruct.new(req_info[:recommendations])
 
         { info: profile_info, recommendations: recommendations }
       end

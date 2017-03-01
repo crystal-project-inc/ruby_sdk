@@ -55,11 +55,21 @@ begin
   print "Profile found!"
   print "First Name: #{profile.info.first_name}"
   print "Last Name: #{profile.info.last_name}"
-  print "Predicted DISC Type: #{profile.info.disc_type}"
-  print "Prediction Confidence: #{profile.info.confidence}"
-  print "Personality Overview: #{profile.info.overview}"
+  print "Predicted DISC Type: #{profile.info.disc_scores.type}"
+  print "Prediction Confidence: #{profile.info.disc_scores.confidence}"
+  print "DISC Image: #{profile.info.disc_image}"
 
-  print "Recommendations: #{profile.recommendations}"
+  print "Personality Overview: #{profile.recommendations.overview}"
+  print "Personality Qualities: #{profile.recommendations.qualities}"
+
+  print "Likely motivations: #{profile.recommendations.motivations}"
+  print "Likely behaviors: #{profile.recommendations.behavior}"
+
+  print "Tips on emailing: #{profile.recommendations.emailing}"
+  print "Tips on communication: #{profile.recommendations.communication}"
+  print "Tips on building trust: #{profile.recommendations.building_trust}"
+  print "Tips on selling: #{profile.recommendations.selling}"
+  print "Tips on working together: #{profile.recommendations.working_together}"
 
 rescue CrystalSDK::Profile::NotFoundError
   print "No profile was found"
@@ -89,6 +99,7 @@ When requesting large amounts of profiles, or when wanting to have more fine-gra
 Sometimes, it isn't important to have the profile information immediately. Especially when dealing with larger jobs or passive data enrichment. In that case, we allow you to save the Request ID and pull information from the request at a later time via this ID.
 
 ```ruby
+query = { first_name: "Drew", ... }
 
 # Send the request to Crystal
 profile_request = CrystalSDK::Profile::Request.from_search(query)
@@ -103,7 +114,7 @@ profile_request_id = profile_request.id
 saved_req = CrystalSDK::Profile::Request.new(profile_request_id)
 
 if saved_req.did_finish? && saved_req.did_find_profile?
-  profile = saved_req.profile
+  profile = CrystalSDK::Profile.from_request(saved_req)
   ...
 end
 ```
@@ -120,20 +131,20 @@ PAUSE_IN_SECONDS = 3
 
 # Start the request
 query = { first_name: "Drew", ... }
-request = CrystalSDK::Profile::Request.from_search(query)
+profile_request = CrystalSDK::Profile::Request.from_search(query)
 
 # Poll server until request finishes
 MAX_RETRIES.times do
 
   # If the request hasn't finished, wait and loop again
-  unless request.did_finish?
+  unless profile_request.did_finish?
     sleep(PAUSE_IN_SECONDS)
     next
   end
 
   # Get profile information
-  if request.did_find_profile?
-    profile = Profile.from_request(request)
+  if profile_request.did_find_profile?
+    profile = CrystalSDK::Profile.from_request(profile_request)
   end
 
   break
