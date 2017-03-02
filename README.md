@@ -5,6 +5,7 @@
 
 This gem provides access to Crystal, the world's largest and most accurate personality database!
 
+
 ![API Summary](docs/api_summary.gif)
 
 ## FAQ
