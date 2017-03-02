@@ -66,7 +66,6 @@ module CrystalSDK
         return false unless did_finish? && fetch_status == 'complete'
 
         info = fetch_request_info
-        print info
         !info[:info][:error]
       rescue Profile::NotFoundError
         false
