@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    crystal_sdk (1.0.3)
+    crystal_sdk (1.1.1)
       nestful (~> 1.1)
       recursive-open-struct (~> 1.0)
 
@@ -16,7 +16,7 @@ GEM
     hashdiff (0.3.2)
     nestful (1.1.1)
     public_suffix (2.0.5)
-    recursive-open-struct (1.0.2)
+    recursive-open-struct (1.0.4)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
