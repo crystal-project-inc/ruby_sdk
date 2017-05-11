@@ -35,6 +35,7 @@ Here's how you use it:
 
 ## Synchronous Flow (Recommended)
 
+### Profile
 ```ruby
 require 'crystal_sdk'
 
@@ -88,6 +89,16 @@ rescue StandardError => e
   print "Unexpected error occurred: #{e}"
 
 end
+```
+### Email Samples
+```ruby
+  request_id = '4969f4c3-6d5e-42e1-bf73-342fe8c8a3f1'
+  email_samples = CrystalSDK::EmailSample.all(request_id)
+  email_samples.each do |sample|
+    print "label: #{sample[:label]}"
+    print "description: #{sample[:description]}"
+    print "text: #{sample[:text]}"
+  end
 ```
 
 ## Asynchronous Flow (For bulk analysis)
