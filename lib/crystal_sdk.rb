@@ -7,9 +7,6 @@ module CrystalSDK
   autoload :Profile, 'crystal_sdk/profile'
   autoload :EmailSample, 'crystal_sdk/email_sample'
 
-  crystal_env_key = ENV['CRYSTAL_KEY']
-  CrystalSDK.key = crystal_env_key if crystal_env_key
-
   class << self
     def key
       Base.key
@@ -27,4 +24,7 @@ module CrystalSDK
       Base.key = value
     end
   end
+
+  crystal_env_key = ENV['CRYSTAL_KEY']
+  CrystalSDK.key = crystal_env_key if crystal_env_key
 end
