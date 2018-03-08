@@ -4,11 +4,12 @@ require_relative 'profile/request'
 
 module CrystalSDK
   class Profile
-    attr_reader :info, :recommendations
+    attr_reader :info, :recommendations, :request_id
 
-    def initialize(info, recommendations)
+    def initialize(info:, recommendations:, request_id:)
       @info = info
       @recommendations = recommendations
+      @request_id = request_id
     end
 
     class << self
@@ -16,7 +17,7 @@ module CrystalSDK
         return nil unless req.did_find_profile?
 
         profile_info = req.profile_info
-        Profile.new(profile_info[:info], profile_info[:recommendations])
+        Profile.new(info: profile_info[:info], recommendations: profile_info[:recommendations], request_id: req.id)
       end
 
       def search(query, timeout: 30)

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    crystal_sdk (1.1.1)
+    crystal_sdk (1.2.1)
       nestful (~> 1.1)
       recursive-open-struct (~> 1.0)
 
@@ -14,9 +14,9 @@ GEM
       safe_yaml (~> 1.0.0)
     diff-lcs (1.3)
     hashdiff (0.3.2)
-    nestful (1.1.1)
+    nestful (1.1.3)
     public_suffix (2.0.5)
-    recursive-open-struct (1.0.4)
+    recursive-open-struct (1.1.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -45,4 +45,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.13.6
+   1.16.1

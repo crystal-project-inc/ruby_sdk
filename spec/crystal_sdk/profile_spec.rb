@@ -9,6 +9,7 @@ describe CrystalSDK::Profile do
 
     it 'should use the correct request' do
       resp = double(
+        id: 'deadbeef',
         did_finish?: true,
         did_find_profile?: true,
         profile_info: { info: 'info', recommendations: 'recs' }

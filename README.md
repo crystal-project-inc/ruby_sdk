@@ -101,6 +101,14 @@ end
   end
 ```
 
+
+### Relationships
+```ruby
+profile1 = CrystalSDK::Profile.search({})
+profile2 = CrystalSDK::Profile.search({})
+CrystalSDK::Api.make_request(:post, "relationships/#{profile1.request_id}/#{profile2.request_id}")
+```
+
 ## Asynchronous Flow (For bulk analysis)
 
 When requesting large amounts of profiles, or when wanting to have more fine-grained control over performance, we recommend using our asynchronous flow. It allows us to process your requests in parallel and get the information back to you more quickly. There are a couple options for using this capability.
